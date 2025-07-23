@@ -227,10 +227,7 @@
 				.then(res => res.json())
 				.then(result => {
 					console.log(result.message || result);
-					// Add a tiny delay for UX, then close the tab
-					setTimeout(() => {
-						window.close();
-					}, 500); // 0.5s delay (optional)
+					window.close();
 				})
 				.catch(error => {
 					console.error('HTML Print failed:', error);
