@@ -3,7 +3,7 @@ module.exports = {
     {
       name: 'print-server',
       // The script path is now relative to the project root, where pm2 is run.
-      script: './Server/index.js',
+      script: './index.js',
       // exec_mode: 'fork' is crucial for stability in simple servers.
       // It prevents PM2 from using the complex 'cluster' mode, which can hide errors.
       exec_mode: 'fork',
@@ -12,8 +12,8 @@ module.exports = {
       watch: false,
       // --- Log Management ---
       // Log paths are now relative to the project root.
-      output: './Server/logs/out.log',
-      error: './Server/logs/error.log',
+      output: './logs/out.log',
+      error: './logs/error.log',
       // Merge logs from all instances of the app
       merge_logs: true,
       // Add timestamps to the logs
