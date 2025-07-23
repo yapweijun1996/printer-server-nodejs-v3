@@ -182,6 +182,14 @@ The demo page allows you to:
     - `puppeteer`: For high-quality, server-side PDF generation.
     - `pdf-to-printer`: For sending the generated PDF to a physical printer.
     - `uuid`: For creating unique filenames to prevent conflicts.
+    - `dotenv`: For managing environment variables.
+
+3.  **Configure Environment**
+    Create a `.env` file in the `Server` directory by copying the example template:
+    ```bash
+    cp .env.example .env
+    ```
+    You can edit the `.env` file to change the default port if needed.
 
 ---
 
@@ -227,12 +235,16 @@ Generates a high-quality PDF from raw HTML and sends it to a printer.
     {
       "htmlContent": "<html><body><h1>Hello, world!</h1></body></html>",
       "paperSize": "a4",
-      "printerName": "My_HP_LaserJet"
+      "printerName": "My_HP_LaserJet",
+      "printerOptions": {
+        "copies": 2
+      }
     }
     ```
     - `htmlContent` (string, required): The raw HTML to be rendered.
     - `paperSize` (string, optional): Defaults to `a4`. Other values like `letter`, `legal`, `a5` are supported.
     - `printerName` (string, optional): The name of the target printer. If omitted, the system's default printer is used.
+    - `printerOptions` (object, optional): An object containing additional options to pass directly to the `pdf-to-printer` library (e.g., `{ copies: 3 }`).
 
 *   **Response (Success):**
     ```json
@@ -253,11 +265,15 @@ Prints an existing PDF provided as a Base64-encoded string.
     ```json
     {
       "base64Data": "JVBERi0xLjQKJcTl8uXr...",
-      "printerName": "My_HP_LaserJet"
+      "printerName": "My_HP_LaserJet",
+      "printerOptions": {
+        "copies": 2
+      }
     }
     ```
     - `base64Data` (string, required): The Base64-encoded content of the PDF file.
     - `printerName` (string, optional): The target printer name. Defaults to the system default.
+    - `printerOptions` (object, optional): An object containing additional options to pass directly to the `pdf-to-printer` library (e.g., `{ copies: 3 }`).
 
 *   **Response (Success):**
     ```json
