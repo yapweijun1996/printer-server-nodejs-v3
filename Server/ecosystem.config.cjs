@@ -7,7 +7,8 @@ module.exports = {
       // It prevents PM2 from using the complex 'cluster' mode, which can hide errors.
       exec_mode: 'fork',
       // The 'cwd' ensures that all relative paths (./routes, ../public) work correctly.
-      cwd: __dirname,
+      // Using '.' is the most robust way to specify the current directory.
+      cwd: '.',
       watch: false,
       env: {
         NODE_ENV: 'development',

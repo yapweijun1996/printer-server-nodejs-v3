@@ -364,14 +364,14 @@ npm install pm2 -g
 
 ### Step 2: Start the Application
 
-The project includes an `ecosystem.config.js` file, which is the standard configuration file for PM2. It tells PM2 how to run the print server.
+The project includes an `ecosystem.config.cjs` file, which is the standard configuration file for PM2. It tells PM2 how to run the print server. **Note the `.cjs` extension**, which is required because this project uses ES Modules.
 
 To start the server in production mode, navigate to the `Server` directory and use the provided npm script:
 ```bash
 # From the Server/ directory
 npm run start:prod
 ```
-This command executes `pm2 start ecosystem.config.js` and will launch the server in the background.
+This command executes `pm2 start ecosystem.config.cjs` and will launch the server in the background.
 
 ### Step 3: Manage the Application
 
@@ -398,6 +398,12 @@ Once the server is running, you can manage it with these commands from the `Serv
 *   **Restart the Server**:
     ```bash
     pm2 restart print-server
+    ```
+*   **Delete the Server**: Completely remove the server from PM2's list of processes. This is useful for a clean shutdown or before re-configuring.
+    ```bash
+    npm run delete:prod
+    # or
+    pm2 delete print-server
     ```
 
 ### Step 4: Enable Startup on Reboot (Crucial for Production)
