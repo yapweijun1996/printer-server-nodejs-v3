@@ -186,36 +186,32 @@ The demo page allows you to:
 1.  **Clone the Repository**
     ```bash
     git clone https://github.com/yapweijun1996/printer-server-nodejs-v1.git
-    cd printer-server-nodejs-v1/Server
+    cd printer-server-nodejs-v1
     ```
 
 2.  **Install Dependencies**
-    From within the `Server` directory, run the following command to install all required packages:
+    From the **project root directory**, run the following command:
     ```bash
     npm install
     ```
-    This will install all dependencies listed in the `package.json` file, including:
-    - `express`: The web server framework.
-    - `cors`: For enabling cross-origin requests.
-    - `puppeteer`: For high-quality, server-side PDF generation.
-    - `pdf-to-printer`: For sending the generated PDF to a physical printer.
-    - `uuid`: For creating unique filenames to prevent conflicts.
-    - `dotenv`: For managing environment variables.
+    This will install all dependencies listed in `package.json` into a `node_modules` directory at the project root.
 
 3.  **Configure Environment**
-    Create a `.env` file in the `Server` directory by copying the example template:
+    The environment file is still located in the `Server` directory.
     ```bash
-    cp .env.example .env
+    # From the project root
+    cp Server/.env.example Server/.env
     ```
-    You can edit the `.env` file to change the default port if needed.
+    You can edit `Server/.env` to change the default port if needed.
 
 ---
 
 ## Running the Server
 
-From within the `Server` directory, start the server:
+All commands should now be run from the **project root directory**.
 
 ```bash
+# From the project root
 npm start
 ```
 
@@ -383,11 +379,11 @@ Once the server is running, you can manage it with these commands from the `Serv
     # or
     pm2 list
     ```
-*   **View Logs**: Tail the logs in real-time to monitor requests and errors.
+*   **View Logs**: PM2 is now configured to store all logs in the `Server/logs/` directory, with timestamps. This is the best place to look for errors. You can tail them with:
     ```bash
     npm run logs:prod
     # or
-    pm2 logs print-server
+    npx pm2 logs print-server
     ```
 *   **Stop the Server**:
     ```bash

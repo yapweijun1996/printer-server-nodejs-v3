@@ -32,6 +32,19 @@ app.use('/api', printRoutes);
 // This must be the last piece of middleware loaded
 app.use(errorHandler);
 
+// --- Global Error Handlers ---
+// These handlers catch any errors that are not handled by a try/catch block
+// and log them before the process exits.
+process.on('uncaughtException', (error) => {
+    logger.error(`Uncaught Exception: ${error.message}`, { stack: error.stack });
+    process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    logger.error('Unhandled Rejection at:', { promise, reason });
+    process.exit(1);
+});
+
 // --- Start the Server ---
 app.listen(port, () => {
     logger.info(`Node.js Print Server listening at http://localhost:${port}`);

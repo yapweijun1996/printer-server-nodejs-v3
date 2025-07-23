@@ -1,9 +1,0 @@
-# Logs
-log.txt
-*.log
-
-# Dependencies
-node_modules
-
-# Environment Variables
-.env

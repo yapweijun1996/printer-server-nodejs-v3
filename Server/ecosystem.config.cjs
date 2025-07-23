@@ -10,6 +10,14 @@ module.exports = {
       // Using '.' is the most robust way to specify the current directory.
       cwd: '.',
       watch: false,
+      // --- Log Management ---
+      // Redirect output and error logs to the 'Server/logs' directory
+      output: './logs/out.log',
+      error: './logs/error.log',
+      // Merge logs from all instances of the app
+      merge_logs: true,
+      // Add timestamps to the logs
+      log_date_format: 'YYYY-MM-DD HH:mm:ss',
       env: {
         NODE_ENV: 'development',
       },
