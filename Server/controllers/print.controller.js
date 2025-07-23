@@ -21,6 +21,13 @@ async function getSharedBrowser() {
 
 export const printHtml = async (req, res, next) => {
     logger.info(`Processing /api/print-html request from ${req.ip}`);
+    
+    // Log the entire request body for debugging dynamic content issues.
+    logger.info({
+        message: 'Received data for /api/print-html',
+        body: req.body,
+    });
+
     const { htmlContent, paperSize = 'a4', printerName, printerOptions = {} } = req.body;
 
     let page;
