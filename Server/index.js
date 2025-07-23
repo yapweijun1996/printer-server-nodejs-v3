@@ -1,12 +1,17 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import { fileURLToPath } from 'url';
+import path from 'path';
 import printRoutes from './routes/print.routes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import logger from './config/logger.js';
 
 // --- Basic Setup ---
 dotenv.config(); // Load environment variables from .env file
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // --- Initialize Express App ---
 const app = express();
@@ -16,8 +21,11 @@ const port = process.env.PORT || 3000;
 app.use(cors()); // Enable CORS for all routes
 app.use(express.json({ limit: '50mb' })); // Enable support for large JSON payloads
 
+// --- Serve Static UI ---
+const publicPath = path.join(__dirname, '..', 'public');
+app.use(express.static(publicPath));
+
 // --- API Routes ---
-app.get('/', (req, res) => res.send('Node.js Print Server is running!'));
 app.use('/api', printRoutes);
 
 // --- Error Handling ---

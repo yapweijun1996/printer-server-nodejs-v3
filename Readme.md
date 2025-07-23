@@ -7,6 +7,7 @@ A simple yet powerful print server built with Node.js. It converts raw HTML to h
 ## Table of Contents
 
 - [Features](#features)
+- [Web Interface for Testing](#web-interface-for-testing)
 - [Key Concepts for Junior Developers](#key-concepts-for-junior-developers)
 - [Logic Breakdown](#logic-breakdown)
   - [High-Quality Printing Flow (`/api/print-html`)](#high-quality-printing-flow-apiprint-html)
@@ -35,6 +36,23 @@ A simple yet powerful print server built with Node.js. It converts raw HTML to h
 - **CORS Enabled**: Ready for cross-origin requests from any web front-end.
 - **Cross-Platform**: Uses the excellent [`pdf-to-printer`](https://www.npmjs.com/package/pdf-to-printer) library for broad compatibility.
 - **Lightweight**: Built with Express.js for a minimal footprint.
+- **Simple Web Interface**: Includes a web-based UI for easy testing and printer discovery.
+
+---
+
+## Web Interface for Testing
+
+This server includes a simple, built-in web interface to make setup and testing as easy as possible.
+
+**Once the server is running, open your web browser and navigate to:**
+
+[http://localhost:3000](http://localhost:3000)
+
+The control panel allows you to:
+-   **Fetch Printers**: Click the "Refresh Printer List" button to see all printers available to the server.
+-   **Send Test Jobs**: Write or paste HTML into the text area, select a printer, and click "Print" to send a test page.
+
+This is the recommended way to verify that your server is running correctly and can communicate with your printers.
 
 ---
 
