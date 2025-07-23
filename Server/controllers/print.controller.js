@@ -1,11 +1,13 @@
 import path from 'path';
 import fs from 'fs';
+import { fileURLToPath } from 'url';
 import puppeteer from 'puppeteer';
 import { v4 as uuidv4 } from 'uuid';
 import pkg from 'pdf-to-printer';
 const { print, getPrinters } = pkg;
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 let sharedBrowser;
 async function getSharedBrowser() {
