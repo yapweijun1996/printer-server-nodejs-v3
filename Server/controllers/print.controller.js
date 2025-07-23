@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import puppeteer from 'puppeteer';
 import { v4 as uuidv4 } from 'uuid';
 import pkg from 'pdf-to-printer';
+import logger from '../config/logger.js';
 const { print, getPrinters } = pkg;
 
 const __filename = fileURLToPath(import.meta.url);
@@ -19,7 +20,7 @@ async function getSharedBrowser() {
 }
 
 export const printHtml = async (req, res, next) => {
-    console.log(`[${new Date().toLocaleString()}] Print request...`);
+    logger.info(`Processing /api/print-html request from ${req.ip}`);
     const { htmlContent, paperSize = 'a4', printerName, printerOptions = {} } = req.body;
 
     let page;
@@ -64,13 +65,18 @@ export const printHtml = async (req, res, next) => {
         };
         await print(tempFilePath, options);
 
+        logger.info(`Successfully processed print job for ${printerName || 'default'}.`);
         res.status(200).json({ message: 'High-quality print job sent successfully!' });
     } catch (error) {
-        console.error('Error during Puppeteer printing:', error);
+        logger.error({
+            message: 'Error during Puppeteer printing',
+            error: error.message,
+            stack: error.stack
+        });
         return next(error); // Pass error to the centralized handler
     } finally {
         if (page) await page.close();
-        if (tempFilePath) await fs.promises.unlink(tempFilePath).catch(err => console.error(`Failed to delete temp file ${tempFilePath}:`, err));
+        if (tempFilePath) await fs.promises.unlink(tempFilePath).catch(err => logger.error(`Failed to delete temp file ${tempFilePath}: ${err.message}`));
     }
 };
 
@@ -88,21 +94,31 @@ export const printBase64 = async (req, res, next) => {
         };
         await print(tempFilePath, options);
         
+        logger.info(`Successfully processed base64 print job for ${printerName || 'default'}.`);
         res.status(200).json({ message: 'Base64 print job sent successfully!' });
     } catch (error) {
-        console.error('Error during Base64 printing:', error);
+        logger.error({
+            message: 'Error during Base64 printing',
+            error: error.message,
+            stack: error.stack
+        });
         return next(error); // Pass error to the centralized handler
     } finally {
-        if (tempFilePath) await fs.promises.unlink(tempFilePath).catch(err => console.error(`Failed to delete temp file ${tempFilePath}:`, err));
+        if (tempFilePath) await fs.promises.unlink(tempFilePath).catch(err => logger.error(`Failed to delete temp file ${tempFilePath}: ${err.message}`));
     }
 };
 
 export const getAvailablePrinters = async (req, res, next) => {
     try {
         const printers = await getPrinters();
+        logger.info('Successfully retrieved printer list.');
         res.status(200).json(printers);
     } catch (error) {
-        console.error('Error getting printers:', error);
+        logger.error({
+            message: 'Error getting printers',
+            error: error.message,
+            stack: error.stack
+        });
         return next(error); // Pass error to the centralized handler
     }
 };
