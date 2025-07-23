@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import printRoutes from './routes/print.routes.js';
 import { errorHandler } from './middleware/errorHandler.js';
+import logger from './config/logger.js';
 
 // --- Basic Setup ---
 dotenv.config(); // Load environment variables from .env file
@@ -25,9 +26,9 @@ app.use(errorHandler);
 
 // --- Start the Server ---
 app.listen(port, () => {
-    console.log(`Node.js Print Server listening at http://localhost:${port}`);
-    console.log('Endpoints available:');
-    console.log('  - GET /api/printers');
-    console.log('  - POST /api/print-html (High Quality, Selectable Text)');
-    console.log('  - POST /api/print-base64 (Lower Quality, Image-based)');
+    logger.info(`Node.js Print Server listening at http://localhost:${port}`);
+    logger.info('Endpoints available:');
+    logger.info('  - GET /api/printers');
+    logger.info('  - POST /api/print-html (High Quality, Selectable Text)');
+    logger.info('  - POST /api/print-base64 (Lower Quality, Image-based)');
 });
