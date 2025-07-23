@@ -8,10 +8,12 @@ import { errorHandler } from './middleware/errorHandler.js';
 import logger from './config/logger.js';
 
 // --- Basic Setup ---
-dotenv.config(); // Load environment variables from .env file
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// Load environment variables from the .env file located in the 'Server' directory.
+// This ensures the configuration is found regardless of the process's working directory.
+dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 // --- Initialize Express App ---
 const app = express();
