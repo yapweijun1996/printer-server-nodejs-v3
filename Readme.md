@@ -333,36 +333,77 @@ By default, the server runs on `http://localhost:3000`.
 
 ## Production Deployment with PM2
 
-For running this server in a production environment, it is highly recommended to use a process manager like [PM2](https://pm2.keymetrics.io/). PM2 provides features like automatic restarts, clustering, log management, and monitoring.
+For running this server in a production environment, using a process manager like [PM2](https://pm2.keymetrics.io/) is highly recommended. PM2 keeps your server online by automatically restarting it if it crashes and provides tools for monitoring and managing the process.
 
-### 1. Install PM2
+This project includes a pre-configured PM2 setup. Here’s a step-by-step guide to get it running.
 
-If you don't have PM2 installed, install it globally:
+### Step 1: Install PM2
+
+If you don't already have PM2, install it globally using npm:
 ```bash
 npm install pm2 -g
 ```
 
-### 2. PM2 Configuration
+### Step 2: Start the Application
 
-An `ecosystem.config.js` file is included in the `Server` directory. This file contains the configuration for running the application with PM2.
+The project includes an `ecosystem.config.js` file, which is the standard configuration file for PM2. It tells PM2 how to run the print server.
 
-### 3. Example Usage
-
-From within the `Server` directory:
-
+To start the server in production mode, navigate to the `Server` directory and use the provided npm script:
 ```bash
-# Start the server in production
+# From the Server/ directory
 npm run start:prod
-
-# Check the status
-pm2 list
-
-# View logs
-npm run logs:prod
-
-# Stop the server
-npm run stop:prod
 ```
+This command executes `pm2 start ecosystem.config.js` and will launch the server in the background.
+
+### Step 3: Manage the Application
+
+Once the server is running, you can manage it with these commands from the `Server` directory:
+
+*   **Check Status**: See the status of all running processes managed by PM2.
+    ```bash
+    npm run status:prod
+    # or
+    pm2 list
+    ```
+*   **View Logs**: Tail the logs in real-time to monitor requests and errors.
+    ```bash
+    npm run logs:prod
+    # or
+    pm2 logs print-server
+    ```
+*   **Stop the Server**:
+    ```bash
+    npm run stop:prod
+    # or
+    pm2 stop print-server
+    ```
+*   **Restart the Server**:
+    ```bash
+    pm2 restart print-server
+    ```
+
+### Step 4: Enable Startup on Reboot (Crucial for Production)
+
+To ensure your print server automatically restarts when the server reboots, you need to set up the PM2 startup script.
+
+1.  **Generate the Startup Command**:
+    Run the following command and PM2 will provide you with a command to copy and paste.
+    ```bash
+    pm2 startup
+    ```
+    It will output a line similar to this (the exact command depends on your OS):
+    `sudo su -c "env PATH=$PATH:/home/user/.nvm/versions/node/v18.12.1/bin pm2 startup <distribution> -u <user> --hp <home-path>"`
+
+2.  **Execute the Command**:
+    Copy the command provided by `pm2 startup` and run it in your terminal. This registers PM2 as a system service.
+
+3.  **Save the Process List**:
+    Finally, save the current list of running processes so PM2 knows to restart them on reboot.
+    ```bash
+    pm2 save
+    ```
+
+Your print server is now fully configured to run as a persistent background service.
 
 ---
 
