@@ -3,10 +3,11 @@ module.exports = {
     {
       name: 'print-server',
       script: 'index.js',
-      // The 'cwd' is crucial. It tells PM2 to run the script
-      // as if we were currently in the 'Server' directory.
-      // This ensures all relative paths (./routes, ./config, ../public) work correctly.
-      cwd: './',
+      // exec_mode: 'fork' is crucial for stability in simple servers.
+      // It prevents PM2 from using the complex 'cluster' mode, which can hide errors.
+      exec_mode: 'fork',
+      // The 'cwd' ensures that all relative paths (./routes, ../public) work correctly.
+      cwd: __dirname,
       watch: false,
       env: {
         NODE_ENV: 'development',
