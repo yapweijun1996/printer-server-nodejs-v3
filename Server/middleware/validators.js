@@ -2,7 +2,15 @@ import { body, validationResult } from 'express-validator';
 
 export const validatePrintHtml = [
     body('htmlContent').isString().withMessage('htmlContent must be a string.').notEmpty().withMessage('htmlContent is required.'),
-    body('paperSize').optional().isString().withMessage('paperSize must be a string.'),
+    body('paperSize').optional().custom((value) => {
+        if (typeof value === 'string') {
+            return true;
+        }
+        if (Array.isArray(value) && value.length === 2 && typeof value[0] === 'number' && typeof value[1] === 'number') {
+            return true;
+        }
+        throw new Error('paperSize must be a string or an array of two numbers.');
+    }),
     body('printerName').optional().isString().withMessage('printerName must be a string.'),
     body('printerOptions').optional().isObject().withMessage('printerOptions must be an object.'),
     (req, res, next) => {
