@@ -163,62 +163,7 @@ This endpoint allows a front-end application to discover which printers are avai
 
 ---
 
-## How to Use (API Guide)
-
-The demo page allows you to:
-- Test both the high-quality and lower-quality printing methods.
-- See the visual difference between the two outputs.
-- Dynamically select paper sizes.
-- (Future enhancement) Select from a list of available system printers.
-
----
-
-## Prerequisites
-
-- Node.js (v16 or newer recommended)
-- A working printer configured on the host machine.
-- Internet connection (for the initial `npm install` to download Puppeteer's browser).
-
----
-
-## Installation
-
-1.  **Clone the Repository**
-    ```bash
-    git clone https://github.com/yapweijun1996/printer-server-nodejs-v1.git
-    cd printer-server-nodejs-v1
-    ```
-
-2.  **Install Dependencies**
-    From the **project root directory**, run the following command:
-    ```bash
-    npm install
-    ```
-    This will install all dependencies listed in `package.json` into a `node_modules` directory at the project root.
-
-3.  **Configure Environment**
-    The environment file is still located in the `Server` directory.
-    ```bash
-    # From the project root
-    cp Server/.env.example Server/.env
-    ```
-    You can edit `Server/.env` to change the default port if needed.
-
----
-
-## Running the Server
-
-All commands should now be run from the **project root directory**.
-
-```bash
-# From the project root
-npm start
-```
-
-By default, the server runs on `http://localhost:3000`.
-
----
-
+## API Guide
 
 ### GET /api/printers
 
@@ -301,49 +246,6 @@ Prints an existing PDF provided as a Base64-encoded string.
          -d '{"base64Data": "JVBERi0xLjQKJ...", "printerName": "Microsoft_Print_to_PDF"}'
     ```
 
----
-
-## Demo
-
-A comprehensive `demo.html` page is included in the `/Demo` folder. To use it, simply open the file in your web browser while the Node.js server is running.
-
----
-
-## Prerequisites
-
-- Node.js (v16 or newer recommended)
-- A working printer configured on the host machine.
-- Internet connection (for the initial `npm install` to download Puppeteer's browser).
-
----
-
-## Installation
-
-1.  **Clone the Repository**
-    ```bash
-    git clone https://github.com/yapweijun1996/printer-server-nodejs-v1.git
-    cd printer-server-nodejs-v1/Server
-    ```
-
-2.  **Install Dependencies**
-    From within the `Server` directory, run:
-    ```bash
-    npm install
-    ```
-
----
-
-## Running the Server
-
-From within the `Server` directory, start the server:
-
-```bash
-npm start
-```
-
-By default, the server runs on `http://localhost:3000`.
-
----
 
 ## Production Deployment with PM2
 
@@ -360,18 +262,18 @@ npm install pm2 -g
 
 ### Step 2: Start the Application
 
-The project includes an `ecosystem.config.cjs` file, which is the standard configuration file for PM2. It tells PM2 how to run the print server. **Note the `.cjs` extension**, which is required because this project uses ES Modules.
+The project includes an `ecosystem.config.cjs` file at the project root, which is the standard configuration file for PM2.
 
-To start the server in production mode, navigate to the `Server` directory and use the provided npm script:
+To start the server in production mode, run the following command from the **project root directory**:
 ```bash
-# From the Server/ directory
+# From the project root
 npm run start:prod
 ```
-This command executes `pm2 start ecosystem.config.cjs` and will launch the server in the background.
+This command executes `npx pm2 start ecosystem.config.cjs` and will launch the server in the background.
 
 ### Step 3: Manage the Application
 
-Once the server is running, you can manage it with these commands from the `Server` directory:
+Once the server is running, you can manage it with these commands, all run from the **project root directory**:
 
 *   **Check Status**: See the status of all running processes managed by PM2.
     ```bash

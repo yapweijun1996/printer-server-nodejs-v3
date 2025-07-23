@@ -12,70 +12,78 @@ The primary goal of this project is to provide a reliable, high-quality printing
 
 ## 2. Architecture Overview
 
-The project follows a simple client-server architecture:
+The project has been refactored into a modern, modular, and robust structure.
 
--   **Client (Web Browser)**: A web application (such as the provided `Demo/demo.html`) acts as the client. It gathers the content to be printed and sends it to the server via an HTTP request.
--   **Server (Node.js)**: A Node.js server built with Express.js listens for print requests. It handles the core logic of PDF generation and printing.
+-   **Project Root**: The `package.json` and `node_modules` are now at the project root. All commands (`npm install`, `npm start`) should be run from here.
+-   **Server (`/Server`)**: Contains all the back-end source code, organized into a modular structure.
+-   **Public (`/public`)**: Contains a simple HTML, CSS, and JavaScript user interface for easy testing of the server's capabilities.
 
 ### Key Technologies
 
 -   **Backend**: Node.js, Express.js
 -   **PDF Generation**: Puppeteer (for high-quality, server-side rendering)
 -   **Printing**: `pdf-to-printer` (a cross-platform printing library)
--   **Frontend (Demo)**: HTML, CSS, JavaScript (with `fetch` API for server communication)
+-   **Process Management**: PM2 (for production deployment, configured in `ecosystem.config.cjs`)
+-   **Logging**: Winston (for structured, file-based logging, configured in `Server/config/logger.js`)
 
 ---
 
 ## 3. File Structure
 
-The repository is organized into two main directories:
+The repository is now organized as follows:
 
 ```
 .
-├── Demo/
-│   └── demo.html       # A comprehensive front-end for testing the print server.
+├── public/
+│   ├── index.html      # Simple UI for testing
+│   ├── style.css       # Styles for the UI
+│   └── app.js          # Client-side logic for the UI
 ├── Server/
-│   ├── index.js        # The main server file containing all API logic.
-│   └── package.json    # Project dependencies and scripts.
-├── Readme.md           # This file.
-└── context.md          # Detailed project context (this document).
+│   ├── config/         # For configuration files (e.g., logger)
+│   ├── controllers/    # Handles the logic for each API route
+│   ├── middleware/     # Custom middleware (e.g., error handling)
+│   ├── routes/         # Defines the API routes
+│   ├── logs/           # Directory for log files (created automatically)
+│   ├── index.js        # The main server entry point
+│   └── .env            # Environment variables (port, etc.)
+├── .gitignore
+├── context.md          # This file
+├── ecosystem.config.cjs # PM2 configuration
+├── package.json        # Project dependencies and scripts (ROOT)
+└── Readme.md           # Main project documentation
 ```
-
--   **`/Demo`**: Contains the client-side demonstration files. This part of the project is for testing and showcasing the server's capabilities and is not required for the server to run.
--   **`/Server`**: Contains all the back-end code, including the Express server, API endpoints, and dependency management. **This is the core of the project.**
 
 ---
 
 ## 4. Core Components & Logic
 
-### Server (`Server/index.js`)
+### Server (`/Server`)
 
-The `index.js` file is the heart of the application. Its responsibilities include:
+The server logic is now split into multiple directories for better maintainability:
 
-1.  **Server Initialization**: Sets up the Express app, enables CORS, and defines the port.
-2.  **Middleware**: Uses `express.json()` to handle JSON request bodies.
-3.  **API Endpoints**:
-    -   `GET /api/printers`: Fetches and returns a list of available system printers. This allows the front-end to be dynamic.
-    -   `POST /api/print-html`: The high-quality print endpoint. It receives HTML content, uses Puppeteer to launch a headless browser, renders the HTML into a PDF buffer, saves it to a temporary file, and sends it to the printer.
-    -   `POST /api/print-base64`: The lower-quality print endpoint. It receives a Base64-encoded PDF, decodes it into a temporary file, and sends it to the printer.
-4.  **Temporary File Handling**: Both print endpoints create temporary PDF files which are deleted immediately after the print job is sent.
+1.  **`index.js`**: The main entry point. It initializes the Express app, sets up middleware, loads routes, serves the `public` directory, and starts the server. It also contains global error handlers to log any uncaught exceptions.
+2.  **`config/logger.js`**: Configures the Winston logger to write logs to files within the `Server/logs` directory.
+3.  **`routes/print.routes.js`**: Defines all the API endpoints (`/api/printers`, `/api/print-html`, etc.) and links them to the appropriate controller functions.
+4.  **`controllers/print.controller.js`**: Contains the core business logic for each API endpoint. This is where Puppeteer is used, files are written, and print jobs are sent.
+5.  **`middleware/errorHandler.js`**: A centralized error-handling middleware that ensures all API errors are sent back in a consistent JSON format.
 
-### Demo Page (`Demo/demo.html`)
+### PM2 (`ecosystem.config.cjs`)
 
-The demo page is a self-contained HTML file that demonstrates how to interact with the print server's API. Its key features are:
-
-1.  **Two Print Buttons**: One for the high-quality (`/api/print-html`) method and one for the lower-quality (`/api/print-base64`) method.
-2.  **API Calls**: Uses the `fetch` API to send POST requests to the server.
-3.  **Dynamic Content**: The HTML content to be printed is defined directly in the file.
-4.  **User Feedback**: Displays success, error, or informational messages to the user.
+The `ecosystem.config.cjs` file at the root configures PM2 to run the server. It's set up to:
+- Run the server from the project root to ensure `node_modules` are found.
+- Point to the correct entry script (`./Server/index.js`).
+- Redirect all `stdout` and `stderr` to log files in `Server/logs/` for easy debugging.
+- Run in `fork` mode for stability.
 
 ---
 
 ## 5. Development Workflow
 
-1.  **Start the server**: Navigate to the `Server` directory and run `npm start`.
-2.  **Test with the demo**: Open `Demo/demo.html` in a web browser.
-3.  **Make changes**: Modify the server code in `Server/index.js`.
-4.  **Restart the server**: Stop the server (Ctrl+C) and restart it with `npm start` to apply changes.
-
-For more detailed setup and API documentation, please refer to the [Readme.md](Readme.md) file.
+1.  **Install dependencies**: From the **project root**, run `npm install`.
+2.  **Start the server for development**: From the **project root**, run `npm start`. This uses `node` to run the server.
+3.  **Start the server for production**: From the **project root**, run `npm run start:prod`. This uses `pm2` to run the server as a background service.
+4.  **Test with the UI**: Open `http://localhost:3000` in a web browser.
+5.  **Make changes**: Modify the relevant files in the `Server` directory.
+6.  **Restart the server**:
+    - For development, stop the server (Ctrl+C) and restart with `npm start`.
+    - For production, run `npm run restart:prod`.
