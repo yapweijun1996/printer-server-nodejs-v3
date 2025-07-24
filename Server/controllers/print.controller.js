@@ -44,11 +44,10 @@ export const printHtml = async (req, res, next) => {
         await page.setViewport({
             width: viewportWidth,
             height: viewportHeight,
-            deviceScaleFactor: 2,
         });
 
         await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
-        await page.emulateMediaType('screen');
+        await page.emulateMediaType('print');
 
         let pdfOptions = {
             printBackground: true,
@@ -69,6 +68,7 @@ export const printHtml = async (req, res, next) => {
         const options = {
             printer: printerName || undefined,
             ...printerOptions,
+            win32: ['-print-settings "high"', '-print-dpi 600'],
         };
         await print(tempFilePath, options);
 
@@ -82,8 +82,8 @@ export const printHtml = async (req, res, next) => {
         });
         return next(error); // Pass error to the centralized handler
     } finally {
-        if (page) await page.close();
-        if (tempFilePath) await fs.promises.unlink(tempFilePath).catch(err => logger.error(`Failed to delete temp file ${tempFilePath}: ${err.message}`));
+        //if (page) await page.close();
+        //if (tempFilePath) await fs.promises.unlink(tempFilePath).catch(err => logger.error(`Failed to delete temp file ${tempFilePath}: ${err.message}`));
     }
 };
 
